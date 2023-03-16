@@ -7,8 +7,7 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 
@@ -28,6 +27,31 @@ public class GetAndPostExamples {
     }
 
     @Test
+    public void getAllStudents(){
+
+        baseURI = "http://localhost:8081/students";
+
+        when().
+                get(baseURI).
+        then().
+                log().
+                body();
+    }
+
+    @Test
+    public void getStudentID(){
+        baseURI = "http://localhost:8081/students";
+
+        given().
+                queryParam("id", 4).
+        when().
+                get(baseURI).
+        then().
+                log().
+                body();
+    }
+
+    @Test
     public void testGetStatusAndTime(){
 
         Response response = RestAssured.get("http://localhost:8081/students");
@@ -42,7 +66,7 @@ public class GetAndPostExamples {
     }
 
     @Test
-    public void testPost() {
+    public void testPostWithJSONObject() {
 
       //  Map<String, Object> map = new HashMap<String, Object>();
         //map.put("firstName", "Alina");
@@ -57,7 +81,7 @@ public class GetAndPostExamples {
 
         System.out.println(request.toJSONString());
 
-        baseURI = "http://localhost:8081";;
+        baseURI = "http://localhost:8081";
         given().
                 header("Content-Type", "application/json").
                 contentType(ContentType.JSON).
@@ -67,5 +91,25 @@ public class GetAndPostExamples {
         then().
                 statusCode(200)
                 .log().all();
+    }
+
+    @Test
+    public void postStudent(){
+
+        baseURI = "http://localhost:8081/students";
+
+        String body = "  {\n" +
+                "            \"firstName\": \"Sergei\",\n" +
+                "            \"lastName\": \"Tsarik\",\n" +
+                "            \"email\": \"david_jackson@anywhere.school\"\n" +
+                "        }";
+
+        given().contentType("application/json").
+                body(body).
+        when().
+                post(baseURI).
+        then().
+                log().
+                body();
     }
 }
