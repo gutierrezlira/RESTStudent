@@ -1,10 +1,11 @@
+import io.restassured.http.ContentType;
 import org.json.simple.JSONObject;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
-public class PutPatchDelete {
+public class PutDelete {
     @Test
     public void testPut() {
 
@@ -19,32 +20,11 @@ public class PutPatchDelete {
         baseURI = "http://localhost:8081";;
         given().
                 header("Content-Type", "application/json").
+                contentType(ContentType.JSON).
                 body(request.toJSONString()).
-                when().
+        when().
                 put("/students/4").
-                then().
-                statusCode(200)
-                .log().all();
-    }
-
-
-    @Test
-    public void testPatch() {
-
-        JSONObject request = new JSONObject();
-
-        request.put("firstName", "Kalina");
-        request.put("email", "dalina@com");;
-
-        System.out.println(request.toJSONString());
-
-        baseURI = "http://localhost:8081";
-        given().
-                header("Content-Type", "application/json").
-                body(request.toJSONString()).
-                when().
-                patch("/students/4").
-                then().
+        then().
                 statusCode(200)
                 .log().all();
     }
@@ -53,8 +33,9 @@ public class PutPatchDelete {
     public void testDelete() {
 
         baseURI = "http://localhost:8081";
-        given().delete("/students/5").
-                then().
+        given().
+                delete("/students/5").
+        then().
                 statusCode(200)
                 .log().all();
     }
